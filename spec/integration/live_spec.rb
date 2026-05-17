@@ -7,7 +7,10 @@ require "stringio"
 require "json"
 
 RSpec.describe Ollama::Observability::Instrumentor, :integration do
-  before { |ex| IntegrationHelper.skip_unless_live!(ex, requires_chat: true) }
+  before do
+    reason = IntegrationHelper.skip_reason(requires_chat: true)
+    skip(reason) if reason
+  end
 
   let(:sink) { StringIO.new }
   let(:instrumentor) { described_class.new(logger: Logger.new(sink)) }
